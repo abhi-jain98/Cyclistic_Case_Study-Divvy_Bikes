@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Analysis &amp; Visualization</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cyclistic Case Study</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Data-Cleaning-Process.html">Data Cleaning Process</a>
+</li>
+<li>
+  <a href="Data-Analysis---Visualization.html">Data Analysis</a>
+</li>
+<li>
+  <a href="Final-Report.html">Final Report</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Data Analysis &amp; Visualization</h1>
+
+</div>
+
+
+<p><br />
+<br />
+</p>
+<div id="data-analysis" class="section level1">
+<h1>Data Analysis</h1>
+<p><br />
+</p>
+<div id="load-packages-and-cleaned-dataset" class="section level3">
+<h3>1. Load packages and cleaned dataset</h3>
+<hr />
+<pre class="r"><code>library(tidyverse)
+library(data.table)
+library(ggplot2)
+library(scales)</code></pre>
+<pre class="r"><code>trips_cleaned &lt;- read_csv(&quot;C:/Users/jains/Downloads/Cyclistic Project/Trip_Data_082021-072022/Cyclistic_Combined_Data.csv&quot;)</code></pre>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="ride-length-based-on-various-factors" class="section level3">
+<h3>2. Ride Length Based On various factors</h3>
+<hr />
+<p><strong>2.1 Average Trip Time Vs Membership Type</strong></p>
+<p>We can check and compare the average trip time for both membership
+types.</p>
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(member_casual) %&gt;% 
+  summarize(trip_time_by_membership = mean(trip_time))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   member_casual trip_time_by_membership
+##   &lt;chr&gt;                           &lt;dbl&gt;
+## 1 casual                          1597.
+## 2 member                           756.</code></pre>
+<p>This shows that casual riders tend to spend more time on rides in
+comparison to subscribers. Let’s check some more factors to analyze the
+same.</p>
+<p><br />
+</p>
+<p><strong>2.2 Average Trip Time Vs Day of Week</strong></p>
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(day_of_week) %&gt;% 
+  summarize(trip_time_by_day = mean(trip_time))</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   day_of_week trip_time_by_day
+##   &lt;chr&gt;                  &lt;dbl&gt;
+## 1 Fri                    1047.
+## 2 Mon                    1083.
+## 3 Sat                    1336.
+## 4 Sun                    1385.
+## 5 Thu                     972.
+## 6 Tue                     930.
+## 7 Wed                     933.</code></pre>
+<p>We could see from the data that trip time is usually longer on
+weekends in comparison to other days. We will further classify this data
+on the basis of rider type.<br />
+</p>
+<p><strong>2.3 Average Trip Time Vs Membership and Day of
+Week</strong></p>
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(member_casual,day_of_week) %&gt;% 
+  summarize(trip_time_by_day = mean(trip_time))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 14 × 3
+## # Groups:   member_casual [2]
+##    member_casual day_of_week trip_time_by_day
+##    &lt;chr&gt;         &lt;chr&gt;                  &lt;dbl&gt;
+##  1 casual        Fri                    1480.
+##  2 casual        Mon                    1660.
+##  3 casual        Sat                    1742.
+##  4 casual        Sun                    1838.
+##  5 casual        Thu                    1405.
+##  6 casual        Tue                    1392.
+##  7 casual        Wed                    1368.
+##  8 member        Fri                     735.
+##  9 member        Mon                     733.
+## 10 member        Sat                     853.
+## 11 member        Sun                     861.
+## 12 member        Thu                     724.
+## 13 member        Tue                     705.
+## 14 member        Wed                     713.</code></pre>
+<p>We have already seen from section 2.1 and 2.2 that rides on weekends
+are usually longer and from the above data this is more clear that trip
+time is longer in weekends for both casual as well as members. But
+casual riders ride time is comparatively more than members.<br />
+</p>
+<p><strong>2.4 Count of Rides Vs Day of week</strong></p>
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(day_of_week) %&gt;% 
+  tally()</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   day_of_week      n
+##   &lt;chr&gt;        &lt;int&gt;
+## 1 Fri         628850
+## 2 Mon         606785
+## 3 Sat         778179
+## 4 Sun         709158
+## 5 Thu         652013
+## 6 Tue         624532
+## 7 Wed         629440</code></pre>
+<p>The count of rides being more on weekends could be a factor for more
+trip time.<br />
+</p>
+<p><strong>2.5 Average Ride Length &amp; Count of Rides Vs Membership
+&amp; Day of Week</strong></p>
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(member_casual, day_of_week) %&gt;% 
+  summarize(total_trips_by_day = n(), mean_rides = mean(trip_time)) %&gt;% 
+  arrange(member_casual, day_of_week)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 14 × 4
+## # Groups:   member_casual [2]
+##    member_casual day_of_week total_trips_by_day mean_rides
+##    &lt;chr&gt;         &lt;chr&gt;                    &lt;int&gt;      &lt;dbl&gt;
+##  1 casual        Fri                     263739      1480.
+##  2 casual        Mon                     229306      1660.
+##  3 casual        Sat                     422687      1742.
+##  4 casual        Sun                     380692      1838.
+##  5 casual        Thu                     237575      1405.
+##  6 casual        Tue                     204564      1392.
+##  7 casual        Wed                     210690      1368.
+##  8 member        Fri                     365111       735.
+##  9 member        Mon                     377479       733.
+## 10 member        Sat                     355492       853.
+## 11 member        Sun                     328466       861.
+## 12 member        Thu                     414438       724.
+## 13 member        Tue                     419968       705.
+## 14 member        Wed                     418750       713.</code></pre>
+<p>As we can see that in the case of casual riders, the total trips are
+more on weekends hence the trip time is more on the same days. But in
+the case of members that is not the case. The count of rides are almost
+equal in weekends and weekdays. Hence this could not give a clear
+picture about the trip time. Let’s explore further.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="measuring-summary-statistics-for-ride-length"
+class="section level2">
+<h2>3. Measuring summary statistics for ride length</h2>
+<hr />
+<p>Let’s check for the mean, median, min. and max. value of trip
+time.</p>
+<pre class="r"><code>summary(trips_cleaned$trip_time)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##       1     384     673    1110    1211 2497750</code></pre>
+<p>This shows us that there is huge difference between mean trip time
+and max trip time. So, we can say that there are some of the rides which
+were greater than 1 day or 86400 secs.</p>
+<pre class="r"><code>#Creating a dataframe for trips which are greater than 1 day
+
+greater_than_1_day &lt;- trips_cleaned %&gt;% 
+  filter(trip_time&gt;=86400) %&gt;% 
+  mutate(cont_days=trip_time/86400) %&gt;% 
+  arrange(-cont_days)
+
+#Creating a dataframe for trips which are less than 1 day
+
+less_than_1_day &lt;- trips_cleaned %&gt;% 
+  filter(trip_time&lt;86400 &amp; trip_time&gt;300) %&gt;% 
+  mutate(trip_mins=trip_time/60) %&gt;%
+  group_by(member_casual,trip_mins) %&gt;% 
+  summarize(count=n()) %&gt;% 
+  arrange(-trip_mins) </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p>We will now visualize the data for further analysis.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+</div>
+<div id="data-visualization" class="section level1">
+<h1>Data Visualization</h1>
+<p><br />
+</p>
+<div id="total-no-of-rides-by-category-type" class="section level2">
+<h2>1. Total no of rides by category type</h2>
+<hr />
+<p>We can calculate and visualize the total no of rides for each
+membership category</p>
+<pre class="r"><code>#No. of trips made by rider type
+
+pie &lt;- trips_cleaned %&gt;% 
+  group_by(member_casual) %&gt;% 
+  summarise(count=n(),Percentage=n()/nrow(.)) %&gt;% 
+  ggplot(aes(x=&quot;&quot;, y=count, fill=member_casual))+
+  geom_bar(width = 1, stat = &quot;identity&quot;)+
+  coord_polar(&quot;y&quot;, start=0) +
+  guides(fill = guide_legend(title = &quot;Membership&quot;)) +
+  labs(title=&quot;% of Total Rides by Each Category&quot;)
+
+#Create a blank theme
+
+blank_theme &lt;- theme_minimal()+
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    panel.border = element_blank(),
+    panel.grid=element_blank(),
+    axis.ticks = element_blank(),
+    plot.title=element_text(size=14, face=&quot;bold&quot;)
+  )
+
+#Using pie chart to show the count 
+
+pie + scale_fill_brewer(&quot;Blues&quot;) + blank_theme +
+  theme(axis.text.x=element_blank())+
+  geom_text(aes(y = count/2 + c(0, cumsum(count)[-length(count)]), 
+                label = percent(1-Percentage)), size=5) </code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>So, the data we are using consists of 58% of the rides which are done
+by members and 42% of the rides which are done by casual riders.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="no.-of-rides-each-month" class="section level2">
+<h2>2. No. of rides each month</h2>
+<hr />
+<p>We can check for the count of rides on a monthly basis for each of
+the membership category.</p>
+<pre class="r"><code>#Total Rides Vs Month
+
+trips_cleaned %&gt;% 
+  group_by(month_name,member_casual) %&gt;% 
+  tally() %&gt;% 
+  ggplot(aes(x=month_name, y=n, group=member_casual, color=member_casual)) + geom_line(size=1) +
+  scale_x_discrete(limits = month.abb) +
+  scale_y_continuous(expand = c(0, 0), limits=c(0,400000),labels = label_number(suffix = &quot; K&quot;, scale = 1e-3)) +
+  labs(x=&quot;Month&quot;,y=&quot;Count of Rides&quot;, title=&quot;Most Popular Time Of Year&quot;) +
+  guides(color = guide_legend(title = &quot;Membership&quot;))</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>From the graph we could see that there is a sudden increase in the
+no. of rides between May to October for casual as well as member riders.
+This might be due to the weather and climate conditions. We could infer
+that customers use Cyclistic bikes more often in the summer season than
+in the winter season.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="most-busy-time-of-the-day." class="section level2">
+<h2>3. Most busy time of the day.</h2>
+<hr />
+<p>We will check for the most busy time of the day i.e. the time at
+which the count of rides is maximum. We will calculate this in Hrs.</p>
+<pre class="r"><code>#Creating a separate dataframe for most busy time of Day
+
+busy_time &lt;- trips_cleaned %&gt;% 
+  mutate(Hour=as.character(format(started_at, &quot;%H&quot;))) %&gt;% 
+  group_by(Hour,member_casual) %&gt;% 
+  count(Hour)
+  
+ 
+busy_time %&gt;% 
+  ggplot(aes(x=Hour,y=n,group=member_casual, color=member_casual)) + 
+  geom_line(size=1) + 
+  labs(x=&quot;Hour of Day&quot;,y=&quot;Count of rides&quot;, title=&quot;Most Popular Time Of Day&quot;) +
+  scale_y_continuous(expand = c(0, 0), limits=c(0,300000),labels = label_number(suffix = &quot; K&quot;, scale = 1e-3)) +
+  guides(color = guide_legend(title = &quot;Membership&quot;))</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>It can be observed that the time around 5 PM is the most busy time of
+the day. In the case of members the graph becomes steep at around 8 AM
+and 5 PM. By this we can assume that these people are using CYclistic
+bikes for going to work and coming back.<br />
+In the case of casual riders the steep is observed only at 5PM, this
+could be due two both the reasons. Either they are using it for coming
+back from work or they might use it for leisure.<br />
+<br />
+<br />
+</p>
+</div>
+<div id="total-no.-of-trips-vs-day-of-week" class="section level2">
+<h2>4. Total no. of Trips vs Day of week</h2>
+<hr />
+<p>Let’s calculate the total no. of trips per day in a week.</p>
+<pre class="r"><code>#No of rides per day of a week
+
+##Creating a dataframe for rides per day of week
+
+rides_day_week &lt;- trips_cleaned %&gt;% 
+  group_by(member_casual, day_of_week) %&gt;% 
+  summarize(total_trips_by_day = n(), mean_rides = mean(trip_time)) %&gt;% 
+  arrange(member_casual, day_of_week)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>##Arranging the rides in order of days
+
+rides_day_week$day_of_week &lt;- factor(rides_day_week$day_of_week, levels = c(&quot;Sun&quot;, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;))
+
+##Plotting a line chart to visualize 
+
+rides_day_week %&gt;% 
+  ggplot(aes(x = day_of_week, y = total_trips_by_day, group = member_casual, color=member_casual)) +
+  geom_line(size=1) +
+  scale_y_continuous(expand = c(0, 0), limits=c(0,500000),labels = label_number(suffix = &quot; K&quot;, scale = 1e-3)) +
+  labs(x=&quot;Day Of Week&quot;,y=&quot;Count of rides&quot;, title=&quot;Count Of Rides Vs Day Of Week&quot;) +
+  guides(color = guide_legend(title = &quot;Membership&quot;))</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>From above, we can conclude that more no. of rides are being done by
+members in weekdays as compared to casual riders.<br />
+Whereas more no. of rides are done by casual riders in weekends than
+members.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="percentage-of-total-rides-for-each-ride-type"
+class="section level2">
+<h2>5. Percentage of Total Rides for each ride type</h2>
+<hr />
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(rideable_type, member_casual) %&gt;% 
+  summarize(count_ride_type = n(),Perc_of_total_rides=(n()/nrow(.))*100) %&gt;% 
+  ggplot(aes(x=member_casual, y=Perc_of_total_rides , fill=member_casual)) +
+  geom_col(position=&quot;dodge&quot;, show.legend = FALSE) +
+  facet_wrap(~ rideable_type) +
+  scale_y_continuous(labels=function(x) paste0(x,&quot;%&quot;)) +
+  labs(x=&quot;Membership&quot;,y=&quot;% of Total Rides&quot;,title=&quot;% Of Total Rides For Each Ride Type &amp; Membership &quot;) </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;rideable_type&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>This shows us that members usually prefer classic bikes whereas
+casual riders don’t have a fixed preference.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="average-ride-length-for-each-day-of-week"
+class="section level2">
+<h2>6. Average ride length for each day of week</h2>
+<hr />
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(member_casual, day_of_week) %&gt;% 
+  summarize(total_trips_by_day = n(), average_ride_length = mean(trip_time)) %&gt;% 
+  arrange(member_casual, day_of_week) %&gt;% 
+  ggplot(aes(x = day_of_week, y = average_ride_length, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;) +
+  labs(x=&quot;Day of Week&quot;,y=&quot;Average Trip Time&quot;, title=&quot;Average Ride Length Vs Day of Week&quot;) +
+  guides(fill = guide_legend(title = &quot;Membership&quot;))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="relationship-between-count-of-rides-with-different-parameters"
+class="section level2">
+<h2>7. Relationship between count of rides with different
+parameters</h2>
+<hr />
+<p>We can check the relationship between percentage of total rides with
+respect to rider type, day of week and membership criteria. Let’s check
+this.</p>
+<pre class="r"><code>trips_cleaned %&gt;% 
+  group_by(rideable_type,member_casual,day_of_week) %&gt;% 
+  summarize(total_trips=n(),Percentage_total=(n()/nrow(.))*100) %&gt;% 
+  ggplot(aes(x=member_casual, y=Percentage_total, fill=member_casual)) +
+  geom_col(position=&quot;dodge&quot; , show.legend=FALSE) +
+  facet_grid(rideable_type ~ day_of_week) +
+  scale_y_continuous(labels=function(x) paste0(x,&quot;%&quot;)) +
+  theme(axis.text.x=element_text(angle=45)) +
+  labs(x=&quot;Day of week / Membership&quot;,y=&quot;% of Total Rides / Ride Type&quot;) </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;rideable_type&#39;, &#39;member_casual&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="top-30-stations-for-casual-riders" class="section level2">
+<h2>8. Top 30 stations for casual riders</h2>
+<hr />
+<p>We will now find out the top 30 stations for casual riders. Using
+this we can make an inference that which stations were used mainly as
+the starting point for casual riders.</p>
+<pre class="r"><code>#We will create a separate dataframe for finding top 30 stations
+
+##Filtering the mambership for casual riders and joining start and end stations
+
+stations &lt;- trips_cleaned %&gt;% 
+  filter(member_casual==&#39;casual&#39;) %&gt;% 
+  select(start_station_name,end_station_name) %&gt;% 
+  unite(stations,c(start_station_name,end_station_name),sep=&quot;-&quot;) %&gt;% 
+  group_by(stations) %&gt;% 
+  summarize(Count=n())
+
+##Ordering the no. of times a station is used in descending order
+
+stations &lt;- stations[order(-stations$Count),]
+
+##Extracting top 30 stations
+
+stations &lt;- stations[1:30,]
+
+##Again splitting joined station names to check for same start and end stations
+
+stations[c(&#39;start_station_name&#39;, &#39;end_station_name&#39;)] &lt;- str_split_fixed(stations$stations, &#39;-&#39;, 2)
+
+stations &lt;- stations %&gt;% 
+  mutate(Same_station=ifelse(start_station_name==end_station_name,&#39;Yes&#39;,&#39;No&#39;))</code></pre>
+<p><br />
+</p>
+<p>We have now created a separate dataframe for all the stations with
+the no. of times they are being used. We found that some instances were
+present which had the same start and end station names. We will show
+them in our visualization.</p>
+<p><br />
+</p>
+<pre class="r"><code>stations %&gt;% 
+  ggplot(aes(y=reorder(stations, +Count),x=Count, fill=Same_station)) + geom_col() +
+  labs(x=&quot;Total Trips&quot;, y=&quot;Start Station - End Station&quot;, title=&quot;Top 30 Stations - Casual Riders&quot;) +
+  guides(fill = guide_legend(title = &quot;Same station&quot;))</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>It can be observed that most of the rides done by casual riders have
+the same starting and ending station names. This could be the reason for
+longer trip time for casual riders as they tend to keep the bike with
+them for a longer time which results in increase of trip time.<br />
+<br />
+<br />
+</p>
+</div>
+<div id="top-30-stations-for-member-riders" class="section level2">
+<h2>9. Top 30 stations for member riders</h2>
+<hr />
+<p>After checking the top 30 stations for casual riders, it’s time to
+check the same for member riders. Let’s follow the same steps to check
+the same.</p>
+<pre class="r"><code>#We will create a separate dataframe for finding top 30 stations
+
+##Filtering the mambership for member riders and joining start and end stations
+
+station_names_trips_members &lt;- trips_cleaned %&gt;% 
+  filter(member_casual==&#39;member&#39;) %&gt;% 
+  select(start_station_name,end_station_name) %&gt;% 
+  unite(stations,c(start_station_name,end_station_name),sep=&quot;-&quot;) %&gt;% 
+  group_by(stations) %&gt;% 
+  summarize(Count=n())
+
+##Ordering the no. of times a station is used in descending order
+
+station_names_trips_members &lt;- station_names_trips_members[order(-station_names_trips_members$Count),]
+
+##Extracting top 30 stations
+
+station_names_trips_members &lt;- station_names_trips_members[1:30,]
+
+##Again splitting joined station names to check for same start and end stations
+
+station_names_trips_members[c(&#39;start_station_name&#39;, &#39;end_station_name&#39;)] &lt;- str_split_fixed(station_names_trips_members$stations, &#39;-&#39;, 2)
+
+station_names_trips_members &lt;- station_names_trips_members %&gt;% 
+  mutate(Same_station=ifelse(start_station_name==end_station_name,&#39;Yes&#39;,&#39;No&#39;))</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>station_names_trips_members %&gt;% 
+  ggplot(aes(y=reorder(stations, +Count),x=Count, fill=Same_station)) + geom_col() +
+  labs(x=&quot;Total Trips&quot;, y=&quot;Start Station - End Station&quot;, title=&quot;Top 30 Stations - Members&quot;) +
+  guides(fill = guide_legend(title = &quot;Same station&quot;))</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>In case of members the case is different as there are very few
+instances where starting and ending station names are the same. Hence,
+this can be concluded that members usually use Cyclistc bikes to commute
+to work.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="rides-greater-than-24-hours" class="section level2">
+<h2>10. Rides greater than 24 hours</h2>
+<hr />
+<p>Previously in section 3, we checked that there were some rides that
+were greater than 24 hours or 1 day. We will now visualize to check
+which rider type uses the Cyclistic bikes for more than 1 day.<br />
+<br />
+The dataframe created earlier for this was greater_than_1_day.</p>
+<pre class="r"><code>#Scatterplot showing no. of rides greater than 1 day
+
+greater_than_1_day %&gt;% 
+  ggplot(aes(x = 1:nrow(greater_than_1_day), y = cont_days)) +  
+  geom_point(color=&quot;green&quot;) +
+  facet_wrap(~ member_casual) + 
+  labs(title=&quot;No. of rides greater than 1 Day&quot;, x=&quot;No. of rides&quot;, y=&quot;No. of Days&quot;)</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>From the above chart we can see that there are many instances in case
+of casual riders where the trip time is greater than 1 day with the
+highest trip being for almost 28-30 days while the maximum trip time in
+the case of members was around 1-2 days.</p>
+<p><br />
+<br />
+<br />
+</p>
+</div>
+<div id="rides-less-than-1-day" class="section level2">
+<h2>11. Rides less than 1 day</h2>
+<hr />
+<p>In the similar way, let’s visualize the no. of rides less than 1 day.
+We will use trip time in mins to show this. The dataframe created
+earlier for this purpose was less_than_1_day.<br />
+Please note that we are only considering the rides greater than 5
+mins.</p>
+<pre class="r"><code>#Scatterplot showing count of rides less than 1 day
+
+less_than_1_day %&gt;% 
+  ggplot(aes(x = count, y = trip_mins)) +  
+  geom_point(color=&quot;green&quot;) + 
+  facet_wrap(~member_casual) +
+  labs(title=&quot;No. of rides less than 1 Day&quot;, x=&quot;Count of rides&quot;, y=&quot;Trip Time(mins&quot;)</code></pre>
+<p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>There were many rides for the members which were less than 10 mins.
+This might be because of the membership as they are using Cyclistic for
+small distances too. While in the case of casual riders small rides are
+less.<br />
+<br />
+<br />
+</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
