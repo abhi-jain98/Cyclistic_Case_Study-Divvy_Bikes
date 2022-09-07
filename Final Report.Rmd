@@ -1,0 +1,154 @@
+---
+title: "Final Report"
+output: html_document
+date: "2022-09-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\
+\
+\
+
+## 1. Introduction
+
+* * *
+
+Established in 2016, Cyclistic is a bike-share offering service located in Chicago, USA. Cyclistic currently offers more than 5,800 bicycles that are geo-tracked and locked into a network of over 690 stations across Chicago. The bikes can be unlocked from one station and returned to another station in the system anytime.
+
+As of August 2021, Cyclistic offers the following plans:  
+
+* Single ride passes  
+* Full day passes  
+* Annual memberships  
+
+The Cyclistic team have recently concluded that annual memberships are more profitable than casual riders. Furthermore, the team have noted that while 30% of users use the bikes for their work commute, the majority of Cyclistic users ride for leisure. This report will assess how existing Cyclistic causal riders can be encouraged to convert to annual memberships.
+
+\
+\
+\
+
+## 2. Process
+
+* * *
+
+Cyclistic has provided historical data to be analyzed. For the purpose of this analysis, the only data between August 2021 and July 20222 has been considered. The data was further processed to remove rows where the trip time was negative (potentially false starts or users trying to re-dock a bike to ensure it was secure). The license to use this dataset can be located [here](https://ride.divvybikes.com/data-license-agreement).  
+
+There are around 700,000-800,000 entries for each month saved under their own CSV. Due to the size of the dataset, R has been used to clean and process the large datasets. The chances of any human or manual error are quite low as the data has directly been taken from the bikes themselves. Due to the data privaacy rules, there is no data relating to the type of user.  
+
+The data has been cleaned after merging all the 12 datasets into one, deleting incomplete data elements, removing inconsistencies in data, removing negative ride lengths, sorting the dataset by start time. The complete documentation has been provided in the "Data Cleaning Process".  
+
+The data cleaning process highlighted that there are a few stations which are added or deleted in the Cyclistic Portfolio during the analysis time frame.  
+
+The cleaned dataset has been saved under the file name "trips_cleaned.
+
+\
+\
+\
+
+## 3. Analysis
+
+* * *
+
+**3.1 Most Popular Stations**
+
+\
+
+
+![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Top_Stations_Casual.png)
+
+\
+
+This chart demonstrates the top 30 stations which were used during the timeframe of the analysis for Casual Riders. It shows us that *Streeter Dr & Grand Ave* is the most popular station with total 11,112 round trips. This also shows that most of the casual riders have same start and end stations, hence they tend to keep the bike with them for a longer time which leads to increased trip time.  
+
+We could also visualize the following data using latitude and longitude points on the map. Using this will show if the popular stations are lying in a particular region or different.
+
+\
+
+![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Top_Stations_Members.png)
+
+\
+
+This chart demonstrates the top 30 stations which were used during the timeframe of the analysis for subscribers. It shows that *Ellis Ave & 60th St-Ellis Ave & 55th St* is the most popular stations with 5667 total round trips. So the station used by casual riders was the most popular station. Further, there were very few instances where start and end stations were same.
+
+\
+
+**3.2 Most Popular Time Of Year**
+
+\
+
+![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Day_of_week.png)
+
+\
+
+This Shows us that weekends are the most popular time of the week. This confirms that most of the rides are for leisure purposes. With further statistical analysis we found that Saturday has the most no. of rides with total rides adding to 778,179 rides. However, the total rides differ based on the membership.  
+Casual riders tend to have more rides on weekends while members have more rides during weekdays. The data shows that Saturday is the most busy day for Casual riders having total rides of 422,687 rides while Tuesday is the most busy day for members having total rides of 419,968 rides.
+
+\
+
+
+![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Time_Of_Year.png)
+
+\
+
+If we further analyze the trends breaking down the data for every month, we could see that summers months are the most popular time of year for Cyclistic. After further exploration, we found that 14th July 2021 was the Cyclistic's most popular date with 32,693 trips occuring in one day. 
+
+\
+
+This shows that members use the Cyclistic service more consistently throughout the year having maximum rides on weekdays unlike casual riders whose maximum rides on weekends. Hence, it can be concluded that members use Cyclistic Bikes mostly for commute to work whereas casual riders use bike service for leisure purposes.
+
+\
+
+**3.3 Most Popular Time Of Day**
+
+\
+
+![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Time_Of_day.png)
+
+\
+
+The above line chart shows that the time around 5PM is the most popular time of the day for Cyclistic users. The most common time for members being 17:18:23 for members and 17:20:12 for casual riders. The significant increase of member riders using the bike at 8AM and 5PM suggests that a lot of members are using the Cyclistic service for their work commutes.  
+
+Further the average ride length for casual riders is 26.61 mins while members ride for an average of 12.6 mins. This again shows that casual riders use Cyclistic bike for leisure purposes.
+
+\
+
+**3.4 Longest Ride Length**
+
+\
+
+![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Greater_than_1.png)
+
+\
+
+The following scatter plot shows us that in case of casual riders there are many rides where trip time is greater than 1 day whereas for members there were very few instances where rides were greater than 1 day. The maximum days for which a bike was used continuously was 28 Days. We should consider the pricing options available for this case.
+
+\
+\
+\
+
+## 4. Recomendations
+
+* * *
+
+As identified in the client brief, the marketing recommendations concluded from the insights of this case study should not be focused on encouraging new customers to use the Cyclistic bike service but instead focus on encouraging casual riders to convert to annual memberships.  
+
+The possible marketing recommendations based on the data available could be:  
+
+\
+
+***1. Digital Campaign showing Cyclistic's Bikes being used in Chicago local's everyday life.***  
+
+Section 3.3 identified that the most common time of day for casual and member riders was 5pm. Although casual riders use the bikes slightly more than members during the evening and early hours of the morning, the most popular time of day for casual riders is similar to member riders which is still during the day with a slight peak during work commute times. This insight highlights that there are casual riders using the Cyclistic service for their work commute without investing in an annual membership. To encourage casual riders to become members, a digital campaign which encourages Chicago locals to observe how Cyclistic fits into their every day life would be beneficial. This would also help change public opinion that Cyclistic is a predominantly tourist service. 
+
+\
+
+***2. Notifications/ Email reminders to casual riders to observe price benefits of annual memberships***  
+
+As we have seen from analysis, casual riders tend to have more longer trips. Notifications can be sent to observe price benefits of annual memberships for longer trips rather than purchasing regualar casual trips. 
+
+\
+\
+\
