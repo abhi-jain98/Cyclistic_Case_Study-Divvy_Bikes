@@ -581,7 +581,7 @@ rides_day_week %&gt;%
   ggplot(aes(x = day_of_week, y = total_trips_by_day, group = member_casual, color=member_casual)) +
   geom_line(size=1) +
   scale_y_continuous(expand = c(0, 0), limits=c(0,500000),labels = label_number(suffix = &quot; K&quot;, scale = 1e-3)) +
-  labs(x=&quot;Day Of Week&quot;,y=&quot;Count of rides&quot;, title=&quot;Count Of Rides Vs Day Of Week&quot;) +
+  labs(x=&quot;Day Of Week&quot;,y=&quot;Count of rides&quot;, title=&quot;Most Popular Day Of Week&quot;) +
   guides(color = guide_legend(title = &quot;Membership&quot;))</code></pre>
 <p><img src="Data-Analysis---Visualization_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>From above, we can conclude that more no. of rides are being done by

@@ -274,7 +274,7 @@ rides_day_week %>%
   ggplot(aes(x = day_of_week, y = total_trips_by_day, group = member_casual, color=member_casual)) +
   geom_line(size=1) +
   scale_y_continuous(expand = c(0, 0), limits=c(0,500000),labels = label_number(suffix = " K", scale = 1e-3)) +
-  labs(x="Day Of Week",y="Count of rides", title="Count Of Rides Vs Day Of Week") +
+  labs(x="Day Of Week",y="Count of rides", title="Most Popular Day Of Week") +
   guides(color = guide_legend(title = "Membership"))
 
 ```
