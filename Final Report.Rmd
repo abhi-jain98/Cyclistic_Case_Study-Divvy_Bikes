@@ -1,12 +1,22 @@
 ---
 title: "Final Report"
 output: html_document
-date: "2022-09-07"
+date: "2022-09-06"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+```{r include=FALSE}
+library(tidyverse)
+library(data.table)
+library(ggplot2)
+library(scales)
+
+trips_cleaned <- read_csv("C:/Users/jains/Downloads/Cyclistic Project/Trip_Data_082021-072022/Cyclistic_Combined_Data.csv")
+```
+
 
 \
 \
@@ -56,8 +66,35 @@ The cleaned dataset has been saved under the file name "trips_cleaned.
 
 \
 
+```{r echo=FALSE, warning=FALSE}
+stations <- trips_cleaned %>% 
+  filter(member_casual=='casual') %>% 
+  select(start_station_name,end_station_name) %>% 
+  unite(stations,c(start_station_name,end_station_name),sep="-") %>% 
+  group_by(stations) %>% 
+  summarize(Count=n())
 
-![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Top_Stations_Casual.png)
+##Ordering the no. of times a station is used in descending order
+
+stations <- stations[order(-stations$Count),]
+
+##Extracting top 30 stations
+
+stations <- stations[1:30,]
+
+##Again splitting joined station names to check for same start and end stations
+
+stations[c('start_station_name', 'end_station_name')] <- str_split_fixed(stations$stations, '-', 2)
+
+stations <- stations %>% 
+  mutate(Same_station=ifelse(start_station_name==end_station_name,'Yes','No'))
+
+stations %>% 
+  ggplot(aes(y=reorder(stations, +Count),x=Count, fill=Same_station)) + geom_col() +
+  labs(x="Total Trips", y="Start Station - End Station", title="Top 30 Stations - Casual Riders") +
+  guides(fill = guide_legend(title = "Same station"))
+```
+
 
 \
 
@@ -67,7 +104,35 @@ We could also visualize the following data using latitude and longitude points o
 
 \
 
-![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Top_Stations_Members.png)
+```{r echo=FALSE, warning=FALSE}
+station_names_trips_members <- trips_cleaned %>% 
+  filter(member_casual=='member') %>% 
+  select(start_station_name,end_station_name) %>% 
+  unite(stations,c(start_station_name,end_station_name),sep="-") %>% 
+  group_by(stations) %>% 
+  summarize(Count=n())
+
+##Ordering the no. of times a station is used in descending order
+
+station_names_trips_members <- station_names_trips_members[order(-station_names_trips_members$Count),]
+
+##Extracting top 30 stations
+
+station_names_trips_members <- station_names_trips_members[1:30,]
+
+##Again splitting joined station names to check for same start and end stations
+
+station_names_trips_members[c('start_station_name', 'end_station_name')] <- str_split_fixed(station_names_trips_members$stations, '-', 2)
+
+station_names_trips_members <- station_names_trips_members %>% 
+  mutate(Same_station=ifelse(start_station_name==end_station_name,'Yes','No'))
+
+station_names_trips_members %>% 
+  ggplot(aes(y=reorder(stations, +Count),x=Count, fill=Same_station)) + geom_col() +
+  labs(x="Total Trips", y="Start Station - End Station", title="Top 30 Stations - Members") +
+  guides(fill = guide_legend(title = "Same station"))
+```
+
 
 \
 
@@ -79,7 +144,29 @@ This chart demonstrates the top 30 stations which were used during the timeframe
 
 \
 
-![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Day_of_week.png)
+
+```{r echo=FALSE, warning=FALSE}
+options(dplyr.summarise.inform = FALSE)
+
+rides_day_week <- trips_cleaned %>% 
+  group_by(member_casual, day_of_week) %>% 
+  summarize(total_trips_by_day = n(), mean_rides = mean(trip_time)) %>% 
+  arrange(member_casual, day_of_week)
+
+##Arranging the rides in order of days
+
+rides_day_week$day_of_week <- factor(rides_day_week$day_of_week, levels = c("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"))
+
+##Plotting a line chart to visualize 
+
+rides_day_week %>% 
+  ggplot(aes(x = day_of_week, y = total_trips_by_day, group = member_casual, color=member_casual)) +
+  geom_line(size=1) +
+  scale_y_continuous(expand = c(0, 0), limits=c(0,500000),labels = label_number(suffix = " K", scale = 1e-3)) +
+  labs(x="Day Of Week",y="Count of rides", title="Most Popular Day Of Week") +
+  guides(color = guide_legend(title = "Membership"))
+```
+
 
 \
 
@@ -89,7 +176,18 @@ Casual riders tend to have more rides on weekends while members have more rides 
 \
 
 
-![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Time_Of_Year.png)
+```{r echo=FALSE, warning=FALSE}
+trips_cleaned %>% 
+  group_by(month_name,member_casual) %>% 
+  tally() %>% 
+  ggplot(aes(x=month_name, y=n, group=member_casual, color=member_casual)) + geom_line(size=1) +
+  scale_x_discrete(limits = month.abb) +
+  scale_y_continuous(expand = c(0, 0), limits=c(0,400000),labels = label_number(suffix = " K", scale = 1e-3)) +
+  labs(x="Month",y="Count of Rides", title="Most Popular Time Of Year") +
+  guides(color = guide_legend(title = "Membership"))
+
+```
+
 
 \
 
@@ -105,7 +203,21 @@ This shows that members use the Cyclistic service more consistently throughout t
 
 \
 
-![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Time_Of_day.png)
+```{r echo=FALSE, warning=FALSE}
+busy_time <- trips_cleaned %>% 
+  mutate(Hour=as.character(format(started_at, "%H"))) %>% 
+  group_by(Hour,member_casual) %>% 
+  count(Hour)
+  
+ 
+busy_time %>% 
+  ggplot(aes(x=Hour,y=n,group=member_casual, color=member_casual)) + 
+  geom_line(size=1) + 
+  labs(x="Hour of Day",y="Count of rides", title="Most Popular Time Of Day") +
+  scale_y_continuous(expand = c(0, 0), limits=c(0,300000),labels = label_number(suffix = " K", scale = 1e-3)) +
+  guides(color = guide_legend(title = "Membership"))
+```
+
 
 \
 
@@ -119,7 +231,20 @@ Further the average ride length for casual riders is 26.61 mins while members ri
 
 \
 
-![](C:/Users/jains/Downloads/Cyclistic Project/Visualizations/Greater_than_1.png)
+```{r echo=FALSE, warning=FALSE}
+greater_than_1_day <- trips_cleaned %>% 
+  filter(trip_time>=86400) %>% 
+  mutate(cont_days=trip_time/86400) %>% 
+  arrange(-cont_days)
+
+greater_than_1_day %>% 
+  ggplot(aes(x = 1:nrow(greater_than_1_day), y = cont_days)) +  
+  geom_point(color="green") +
+  facet_wrap(~ member_casual) + 
+  labs(title="No. of rides greater than 1 Day", x="No. of rides", y="No. of Days")
+
+```
+
 
 \
 
